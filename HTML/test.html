@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>BigchainDB boilerplate</title>
+        <!-- BigchainDB driver -->
+        <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
+
+        <script>
+            // Instancia del servidor BigchainDB
+            // import { API_PATH } from '../JS/globals.js';
+             const API_PATH = 'http://192.168.1.6:9984/api/v1/'
+
+            // Creación de un nuevo par de claves
+            const alice = new BigchainDB.Ed25519Keypair()
+
+            // Construcción de payloads de transacciones (en JSON)
+            // Datos
+            const tx = BigchainDB.Transaction.makeCreateTransaction(
+                { Nombre: 'Diego Cardenas', Edad: 2, Titulo: 'Ingeniero de Sistemas' , Tiempo: new Date().toString() },
+                { meta: 'Primera transacción en BigchainDB' },
+
+                // Una transacción necesita una salida
+                [ BigchainDB.Transaction.makeOutput(
+                        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))
+                ],
+                alice.publicKey
+            )
+
+            // Firmar la transacción con claves privadas
+            const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey)
+
+            // Envío la transacción a BigchainDB
+            let conn = new BigchainDB.Connection(API_PATH)
+
+            conn.postTransactionCommit(txSigned)
+                .then(res => {
+                    const elem = document.getElementById('lastTransaction')
+                    elem.href = API_PATH + 'transactions/' + txSigned.id
+                    elem.innerText = txSigned.id
+                    console.log('Transaction', txSigned.id, 'accepted')
+                })
+            // Verifica en la consola el estado de la transacción
+        </script>
+    </head>
+    <body id="home">
+        <h1>Hola BigchainDB</h1>
+        <p>El ID de transacción es: <a id="lastTransaction" target="_blank"><em>processing</em></a></p>
+    </body>
+</html>

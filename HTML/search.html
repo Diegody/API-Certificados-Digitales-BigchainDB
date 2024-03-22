@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Datos en BigchainDB</title>
+    <link rel="stylesheet" href="../CSS/search.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Buscar Datos en BigchainDB</h1>
+        <div class="search-form">
+            <input type="text" id="searchToken" placeholder="Ingrese el token...">
+            <button id="searchButton">Buscar</button>
+        </div>
+        <div id="searchResults"></div>
+    </div>
+
+    <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
+    <script src="../JS/search.js" type="module"></script>
+
+</body>
+</html>

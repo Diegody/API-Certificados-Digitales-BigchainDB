@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz BigchainDB</title>
+    <link rel="stylesheet" href="../CSS/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ingresar Datos a BigchainDB</h1>
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="edad">Documento:</label>
+                <input type="number" id="documento" name="documento">
+            </div>
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre">
+            </div>
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad">
+            </div>
+            <div class="form-group">
+                <label for="programa">Programa:</label>
+                <input type="text" id="programa" name="programa">
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+        <br>
+        <a href="search.html" class="search-link">Ir a búsqueda</a>
+    </div>
+
+    <div id="transactionIdsContainer">
+        <h2>Tokens Generados</h2>
+        <ol id="transactionIds"></ol>
+    </div>
+    <br>
+    
+    <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
+    <script src="../JS/send.js" type="module"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tokensTitle = document.getElementById('transactionIdsContainer').querySelector('h2');
+            const transactionIds = document.getElementById('transactionIds');
+            if (transactionIds.children.length === 0) {
+                tokensTitle.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
