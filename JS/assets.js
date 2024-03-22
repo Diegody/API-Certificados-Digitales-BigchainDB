@@ -1,5 +1,5 @@
+import bs58 from 'bs58';
 import { API_PATH } from './globals.js';
-import bs58 from 'bs58'; 
 
 document.addEventListener('DOMContentLoaded', function() {
     const loadDataButton = document.getElementById('loadDataButton');

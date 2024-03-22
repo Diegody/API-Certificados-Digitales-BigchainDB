@@ -19,10 +19,12 @@ module.exports = {
           },
         },
       },
-      {
-        test: /bs58/,
-        use: 'babel-loader',
-      },
     ],
+  },
+  resolve: {
+    alias: {
+      // Define un alias para bs58
+      bs58: path.resolve(__dirname, 'node_modules/bs58'),
+    },
   },
 };
