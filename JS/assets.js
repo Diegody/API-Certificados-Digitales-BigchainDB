@@ -1,9 +1,9 @@
-import bs58 from 'bs58';
 import { API_PATH } from './globals.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const loadDataButton = document.getElementById('loadDataButton');
     const transactionsTable = document.getElementById('transactionsTable').querySelector('tbody');
+    const transactionIdsList = document.getElementById('transactionIds'); // Obtener el elemento <ul> con el ID "transactionIds"
 
     loadDataButton.addEventListener('click', function() {
         // Generar la clave pública utilizando la lógica de generación de claves
@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Construir la URL de la solicitud GET con la clave pública
         const url = `${API_PATH}outputs?public_key=${publicKey}`;
+
+        console.log('URL: ' + url);
 
         fetch(url, {
             method: 'GET',
@@ -27,6 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(outputs => {
             renderTransactions(outputs);
+            // Iterar sobre los IDs de transacción y agregarlos a la lista
+            outputs.forEach(output => {
+                const newTransactionIdItem = document.createElement('li'); // Crear un nuevo elemento <li> para el nuevo ID de transacción
+                newTransactionIdItem.textContent = output.transaction_id; // Establecer el texto del elemento como el ID de transacción
+                transactionIdsList.appendChild(newTransactionIdItem); // Agregar el nuevo elemento <li> a la lista <ul>
+            });
         })
         .catch(error => {
             console.error('Error al obtener transacciones:', error);
@@ -55,8 +63,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const privateKey = crypto.getRandomValues(new Uint8Array(32)); // Se utiliza la API de Crypto para generar una clave privada aleatoria
     
         // Codificar la clave privada en Base58
-        const privateKeyBase58 = bs58.encode(privateKey);
+        const privateKeyBase58 = encodeBase58(privateKey);
 
         return privateKeyBase58;
+    }
+
+    // Función para codificar en Base58
+    function encodeBase58(data) {
+        const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+        const BASE = ALPHABET.length;
+
+        let res = '';
+        let num = BigInt('0x' + data.reduce((acc, byte) => acc + byte.toString(16).padStart(2, '0'), ''));
+
+        while (num > 0n) {
+            const remainder = num % BigInt(BASE);
+            num = num / BigInt(BASE);
+            res = ALPHABET[remainder] + res;
+        }
+
+        return res;
     }
 });
