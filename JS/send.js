@@ -2,7 +2,8 @@ import { API_PATH } from './globals.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const dataForm = document.getElementById('dataForm');
-    const transactionIds = document.getElementById('transactionIds');
+    const publicKeyElement = document.getElementById('publicKey');
+    const publicKeyContainer = document.getElementById('publicKeyContainer');
     
     dataForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -32,12 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const listItem = document.createElement('li');
                 listItem.innerText = `ID de transacción: ${txSigned.id}`;
                 transactionIds.appendChild(listItem);
+
+                // Mostrar la clave pública en la interfaz
+                publicKeyElement.textContent = alice.publicKey;
+                publicKeyContainer.style.display = 'block';
+
+                // Limpiar el formulario después de enviar los datos
+                dataForm.reset();
             })
             .catch(error => {
                 console.error('Error creating transaction:', error);
             });
-
-        // Limpiar el formulario después de enviar los datos
-        dataForm.reset();
     });
 });

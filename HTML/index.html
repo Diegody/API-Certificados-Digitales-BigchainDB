@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz BigchainDB</title>
+    <title>Interfaz</title>
     <link rel="stylesheet" href="../CSS/styles.css">
 </head>
 <body>
@@ -11,44 +11,83 @@
         <h1>Ingresar Datos a BigchainDB</h1>
         <form id="dataForm">
             <div class="form-group">
-                <label for="edad">Documento:</label>
-                <input type="number" id="documento" name="documento">
+                <label for="documento">Documento:</label>
+                <input type="number" id="documento" name="documento" required>
             </div>
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre">
+                <input type="text" id="nombre" name="nombre" required>
             </div>
             <div class="form-group">
                 <label for="edad">Edad:</label>
-                <input type="number" id="edad" name="edad">
+                <input type="number" id="edad" name="edad" required>
             </div>
             <div class="form-group">
                 <label for="programa">Programa:</label>
-                <input type="text" id="programa" name="programa">
+                <input type="text" id="programa" name="programa" required>
             </div>
             <button type="submit">Enviar</button>
         </form>
         <br>
+        <div id="publicKeyContainer" style="display:none;">
+            <h2>Clave Pública Generada</h2>
+            <p id="publicKey"></p>
+        </div>
+        <div id="transactionIdsContainer">
+            <h2>Tokens Generados</h2>
+            <ol id="transactionIds"></ol> <!-- Agregué este elemento -->
+        </div>
+        <br>
         <a href="search.html" class="search-link">Ir a búsqueda</a>
+        <a href="schema.html" class="search-link">Ir búsqueda total de IDs</a>
     </div>
-
-    <div id="transactionIdsContainer">
-        <h2>Tokens Generados</h2>
-        <ol id="transactionIds"></ol>
-    </div>
-    <br>
     
     <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
     <script src="../JS/send.js" type="module"></script>
-    <script>
+    <script >
+        import { API_PATH } from '../JS/globals.js';
         document.addEventListener('DOMContentLoaded', function() {
-            const tokensTitle = document.getElementById('transactionIdsContainer').querySelector('h2');
-            const transactionIds = document.getElementById('transactionIds');
-            if (transactionIds.children.length === 0) {
-                tokensTitle.style.display = 'none';
-            }
+            const publicKeyContainer = document.getElementById('publicKeyContainer');
+            const publicKeyElement = document.getElementById('publicKey');
+            const transactionIds = document.getElementById('transactionIds'); // Definir la variable transactionIds
+
+            // Escuchar el evento de envío del formulario
+            document.getElementById('dataForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Evitar el envío del formulario por defecto
+                
+                // Obtener los valores de los campos del formulario
+                const documento = document.getElementById('documento').value;
+                const nombre = document.getElementById('nombre').value;
+                const edad = document.getElementById('edad').value;
+                const programa = document.getElementById('programa').value;
+                const fecha = new Date().toString();
+
+                // Crear transacción con BigchainDB
+                const alice = new BigchainDB.Ed25519Keypair();
+                const metadata = { what: 'Transacción en BigchainDB desde interfaz web' };
+                const data = { documento, nombre, edad, programa, fecha };
+
+                const tx = BigchainDB.Transaction.makeCreateTransaction(data, metadata, [BigchainDB.Transaction.makeOutput(BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))], alice.publicKey);
+                const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey);
+
+                // Enviar transacción a BigchainDB
+                new BigchainDB.Connection(API_PATH).postTransactionCommit(txSigned)
+                    .then(res => {
+                        console.log('Transaction', txSigned.id, 'accepted');
+                        // Mostrar el ID de la transacción generada en la interfaz
+                        const listItem = document.createElement('li');
+                        listItem.innerText = `ID de transacción: ${txSigned.id}`;
+                        transactionIds.appendChild(listItem);
+
+                        // Mostrar la clave pública generada por BigchainDB en la interfaz
+                        publicKeyElement.textContent = alice.publicKey;
+                        publicKeyContainer.style.display = 'block'; // Mostrar el contenedor de la clave pública
+                    })
+                    .catch(error => {
+                        console.error('Error creating transaction:', error);
+                    });
+            });
         });
     </script>
-
 </body>
 </html>

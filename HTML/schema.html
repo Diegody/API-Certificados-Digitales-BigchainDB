@@ -3,34 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz de BigchainDB</title>
+    <title>Transacciones</title>
     <link rel="stylesheet" href="../CSS/styles.css">
-    
 </head>
 <body>
     <div class="container">
-        <h1>Interfaz de BigchainDB</h1>
-        <button id="loadDataButton">Cargar Datos de BigchainDB</button>
-        <table id="transactionsTable">
-            <thead>
-                <tr>
-                    <th>ID de Transacción</th>
-                    <th>Operación</th>
-                    <th>Datos del Activo</th>
-                    <th>Meadatos</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <!-- Lista para mostrar IDs de transacción -->
-        <h2>IDs de Transacción Generados</h2>
-        <ul id="transactionIds"></ul>
+        <h1>Interfaz de Transacciones</h1>
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="publicKey">Clave Pública:</label>
+                <input type="text" id="publicKey" name="publicKey" value="">
+            </div>
+            <button type="submit">Buscar Transacciones</button>
+        </form>
+        <div id="transactionIdsContainer">
+            <h2>IDs de Transacción</h2>
+            <ul id="transactionIds"></ul>
+        </div>
     </div>
 
     <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
     <script src="../JS/assets.js" type="module"></script>
-    <script src="../dist/bundle.js" ></script>
-
 </body>
 </html>
