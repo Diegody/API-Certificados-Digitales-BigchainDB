@@ -31,21 +31,22 @@ input[type="number"] {
 }
 
 button {
-    background-color: #4CAF50;
+    display: inline-block;
+    background-color: #ff5100;
     color: white;
     padding: 10px 20px;
-    border: none;
+    text-decoration: none;
     border-radius: 5px;
-    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #ff5100;
 }
 
 .search-link {
     display: inline-block;
-    background-color: #055ec4;
+    background-color: #ff5100;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -54,7 +55,7 @@ button:hover {
 }
 
 .search-link:hover {
-    background-color: #0589aa;
+    background-color: #ff5100;
 }
 
 #transactionIdsContainer {
@@ -79,6 +80,6 @@ button:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 #transactionIds li a {
-    color: #007bff;
+    color: #ff5100;
     text-decoration: none;
 }

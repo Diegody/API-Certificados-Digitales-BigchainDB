@@ -26,43 +26,42 @@
                 <label for="programa">Programa:</label>
                 <input type="text" id="programa" name="programa" required>
             </div>
-            <button type="submit">Enviar</button>
+            <button type="submit">Enviar Activos a BigchainDB</button>
         </form>
         <br>
         <div id="publicKeyContainer" style="display:none;">
             <h2>Clave Pública Generada</h2>
             <p id="publicKey"></p>
         </div>
-        <div id="transactionIdsContainer">
+        <div id="transactionIdsContainer" style="display:none;">
             <h2>Tokens Generados</h2>
             <ol id="transactionIds"></ol> 
         </div>
         <br>
-        <a href="search.html" class="search-link">Ir a búsqueda</a>
-        <a href="schema.html" class="search-link">Ir búsqueda total de IDs</a>
+        <a href="search.html" class="search-link">Buscar esquema por token</a>
+        <a href="schema.html" class="search-link">Buscar esquema por llave pública</a>
     </div>
     
     <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
     <script src="../JS/send.js" type="module"></script>
-    <script >
+    <script type="module">
         import { API_PATH } from '../JS/globals.js';
+        
         document.addEventListener('DOMContentLoaded', function() {
             const publicKeyContainer = document.getElementById('publicKeyContainer');
             const publicKeyElement = document.getElementById('publicKey');
-            const transactionIds = document.getElementById('transactionIds'); // Definir la variable transactionIds
+            const transactionIdsContainer = document.getElementById('transactionIdsContainer');
+            const transactionIds = document.getElementById('transactionIds');
 
-            // Escuchar el evento de envío del formulario
             document.getElementById('dataForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // Evitar el envío del formulario por defecto
-                
-                // Obtener los valores de los campos del formulario
+                event.preventDefault();
+
                 const documento = document.getElementById('documento').value;
                 const nombre = document.getElementById('nombre').value;
                 const edad = document.getElementById('edad').value;
                 const programa = document.getElementById('programa').value;
                 const fecha = new Date().toString();
 
-                // Crear transacción con BigchainDB
                 const alice = new BigchainDB.Ed25519Keypair();
                 const metadata = { what: 'Transacción en BigchainDB desde interfaz web' };
                 const data = { documento, nombre, edad, programa, fecha };
@@ -70,21 +69,21 @@
                 const tx = BigchainDB.Transaction.makeCreateTransaction(data, metadata, [BigchainDB.Transaction.makeOutput(BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))], alice.publicKey);
                 const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey);
 
-                // Enviar transacción a BigchainDB
                 new BigchainDB.Connection(API_PATH).postTransactionCommit(txSigned)
                     .then(res => {
-                        console.log('Transaction', txSigned.id, 'accepted');
-                        // Mostrar el ID de la transacción generada en la interfaz
+                        console.log('Transacción', txSigned.id, 'aceptada');
+
                         const listItem = document.createElement('li');
                         listItem.innerText = `ID de transacción: ${txSigned.id}`;
                         transactionIds.appendChild(listItem);
 
-                        // Mostrar la clave pública generada por BigchainDB en la interfaz
                         publicKeyElement.textContent = alice.publicKey;
-                        publicKeyContainer.style.display = 'block'; // Mostrar el contenedor de la clave pública
+                        publicKeyContainer.style.display = 'block';
+
+                        transactionIdsContainer.style.display = 'block';
                     })
                     .catch(error => {
-                        console.error('Error creating transaction:', error);
+                        console.error('Error al crear la transacción:', error);
                     });
             });
         });
