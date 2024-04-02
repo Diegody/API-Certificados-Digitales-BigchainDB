@@ -33,7 +33,7 @@
             <h2>Clave Pública Generada</h2>
             <p id="publicKey"></p>
         </div>
-        <div id="transactionIdsContainer" style="display:none;">
+        <div id="transactionIdsContainer">
             <h2>Tokens Generados</h2>
             <ol id="transactionIds"></ol> 
         </div>
@@ -52,9 +52,16 @@
             const publicKeyElement = document.getElementById('publicKey');
             const transactionIdsContainer = document.getElementById('transactionIdsContainer');
             const transactionIds = document.getElementById('transactionIds');
+            let formSubmitted = true; 
 
             document.getElementById('dataForm').addEventListener('submit', function(event) {
                 event.preventDefault();
+
+                if (formSubmitted) {
+                    return;
+                }
+
+                formSubmitted = false; 
 
                 const documento = document.getElementById('documento').value;
                 const nombre = document.getElementById('nombre').value;
