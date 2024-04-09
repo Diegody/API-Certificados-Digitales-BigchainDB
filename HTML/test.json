@@ -1,0 +1,41 @@
+{
+    "inputs": [
+        {
+            "owners_before": [
+                "D1YJR15SuoVBPLVe5LA9AzfEyyXVTCNbBqP5UZP99mUD"
+            ],
+            "fulfills": null,
+            "fulfillment": "pGSAILJvomiWskpb2QRbMPPAwDrO4aLrQJV77ZlUlafcHDFagUD7aco_UaONeDDFwfHC7O8qq_nFzI0HTWZZNXa0t_KHcbrCRFU6rai3Obh8VpbqmP4bkpWGGDdQdblXMijN_uIJ"
+        }
+    ],
+    "outputs": [
+        {
+            "public_keys": [
+                "D1YJR15SuoVBPLVe5LA9AzfEyyXVTCNbBqP5UZP99mUD"
+            ],
+            "condition": {
+                "details": {
+                    "type": "ed25519-sha-256",
+                    "public_key": "D1YJR15SuoVBPLVe5LA9AzfEyyXVTCNbBqP5UZP99mUD"
+                },
+                "uri": "ni:///sha-256;GhjeI3h6ZUA6gXRpUfVE2YcKfo6RPd2UkM2XeCdJ4s0?fpt=ed25519-sha-256&cost=131072"
+            },
+            "amount": "1"
+        }
+    ],
+    "operation": "CREATE",
+    "metadata": {
+        "what": "Transacción en BigchainDB desde interfaz web"
+    },
+    "asset": {
+        "data": {
+            "documento": "123456789",
+            "nombre": "Pepito Perez",
+            "edad": 18,
+            "programa": "Ingeniería de Sistemas",
+            "fecha": "Wed Apr 03 2024 16:43:56 GMT-0500 (hora estándar de Colombia)"
+        }
+    },
+    "version": "2.0",
+    "id": "e96414118500cca11313b1d1ee27115402ece926ae149c4843ab514dc3077c00"
+}
