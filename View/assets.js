@@ -22,18 +22,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const url = `${API_PATH}outputs?public_key=${publicKey}`;
 
         fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error de red: ${response.status} - ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(outputs => {
-                renderTransactions(outputs, transactionIdsList);
-            })
-            .catch(error => {
-                console.error('Error al obtener transacciones:', error);
-            });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error de red: ${response.status} - ${response.statusText}`);
+        }
+        return response.json(); // Convertir la respuesta a JSON
+    })
+    .then(outputs => {
+        renderTransactions(outputs, transactionIdsList);
+    })
+    .catch(error => {
+        console.error('Error al obtener transacciones:', error);
+    });
+
     }
 
     function renderTransactions(outputs, transactionIdsList) {
@@ -53,3 +54,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+export { fetchTransactions, renderTransactions };
