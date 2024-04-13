@@ -55,4 +55,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-export { fetchTransactions, renderTransactions };
+// export { fetchTransactions, renderTransactions };
