@@ -1,99 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz</title>
-    <link rel="stylesheet" href="../CSS/styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inicio CertiField</title>
+<link rel="shortcut icon" href="../CSS/images/logo_final.png">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0D1C2F;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .logo {
+    max-width: 25%;
+    margin-bottom: 20px;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .button {
+    background-color: #FF7E00;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .button:hover {
+    background-color: #0D1C2F;
+    color: #FFFFFF;
+  }
+
+  p {
+    text-align: center;
+    max-width: 80%;
+    margin-bottom: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 768px) {
+    .button {
+      width: 100%;
+    }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Ingresar Datos a BigchainDB</h1>
-        <form id="dataForm">
-            <div class="form-group">
-                <label for="documento">Documento:</label>
-                <input type="number" id="documento" name="documento" required>
-            </div>
-            <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="edad">Edad:</label>
-                <input type="number" id="edad" name="edad" required>
-            </div>
-            <div class="form-group">
-                <label for="programa">Programa:</label>
-                <input type="text" id="programa" name="programa" required>
-            </div>
-            <button type="submit">Enviar Activos a BigchainDB</button>
-        </form>
-        <br>
-        <div id="publicKeyContainer" style="display:none;">
-            <h2>Clave Pública Generada</h2>
-            <p id="publicKey"></p>
-        </div>
-        <div id="transactionIdsContainer">
-            <h2>Tokens Generados</h2>
-            <ol id="transactionIds"></ol> 
-        </div>
-        <br>
-        <a href="search.html" class="search-link">Buscar esquema por token</a>
-        <a href="schema.html" class="search-link">Buscar esquema por llave pública</a>
-    </div>
-    
-    <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
-    <script src="../Model/send.js" type="module"></script>
-    <script type="module">
-        // import { API_PATH } from '../JS/globals.js';
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const publicKeyContainer = document.getElementById('publicKeyContainer');
-            const publicKeyElement = document.getElementById('publicKey');
-            const transactionIdsContainer = document.getElementById('transactionIdsContainer');
-            const transactionIds = document.getElementById('transactionIds');
-            let formSubmitted = true; 
-
-            document.getElementById('dataForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                if (formSubmitted) {
-                    return;
-                }
-
-                formSubmitted = false; 
-
-                const documento = document.getElementById('documento').value;
-                const nombre = document.getElementById('nombre').value;
-                const edad = document.getElementById('edad').value;
-                const programa = document.getElementById('programa').value;
-                const fecha = new Date().toString();
-
-                const alice = new BigchainDB.Ed25519Keypair();
-                const metadata = { what: 'Transacción en BigchainDB desde interfaz web' };
-                const data = { documento, nombre, edad, programa, fecha };
-
-                const tx = BigchainDB.Transaction.makeCreateTransaction(data, metadata, [BigchainDB.Transaction.makeOutput(BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))], alice.publicKey);
-                const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey);
-
-                new BigchainDB.Connection(API_PATH).postTransactionCommit(txSigned)
-                    .then(res => {
-                        console.log('Transacción', txSigned.id, 'aceptada');
-
-                        const listItem = document.createElement('li');
-                        listItem.innerText = `ID de transacción: ${txSigned.id}`;
-                        transactionIds.appendChild(listItem);
-
-                        publicKeyElement.textContent = alice.publicKey;
-                        publicKeyContainer.style.display = 'block';
-
-                        transactionIdsContainer.style.display = 'block';
-                    })
-                    .catch(error => {
-                        console.error('Error al crear la transacción:', error);
-                    });
-            });
-        });
-    </script>
+  <img src="../CSS/images/logo_final.png" alt="Logo" class="logo">
+  <p><b>La interfaz de prueba para la funcionalidad de la API de generación de certificados digitales es una interfaz gráfica simple para la verificación y validación de las funcionalidades que se entregan con el uso de la tecnología de Blockchain, el cual para este caso es con el gestor de base de datos descentralizado BigchainDB.</b></p>
+  <div class="button-container">
+    <button class="button" onclick="window.open('form.html', '_blank')"><b>Ingresar datos</b></button>
+    <button class="button" onclick="window.open('schema.html', '_blank')"><b>Buscar esquema por llave pública</b></button>
+    <button class="button" onclick="window.open('search.html', '_blank')"><b>Buscar esquema por token</b></button>
+  </div>
+  <br>
 </body>
 </html>

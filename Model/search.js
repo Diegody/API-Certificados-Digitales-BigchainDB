@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderData(data, token) { // Agregar token como argumento
         // Mostrar los datos en la interfaz
         searchResults.innerHTML = `
-        <p style='color: green;'><b>ESQUEMA GENERADO EXITOSAMENTE</b></p>
+        <p style='color: rgb(4, 255, 46);'><b>ESQUEMA GENERADO EXITOSAMENTE</b></p>
         <p>Resultados para el token <strong>${token}</strong>.</p>
         `;
         for (const key in data) {

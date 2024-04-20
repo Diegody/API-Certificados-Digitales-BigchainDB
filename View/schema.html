@@ -3,16 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transacciones</title>
+    <title>Llave Pública</title>
+    <link rel="shortcut icon" href="../CSS/images/logo_final.png">
     <link rel="stylesheet" href="../CSS/styles.css">
+    <style>
+        body {
+            background-color: #0D1C2F;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%; 
+            max-width: 500px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #FF7E00;
+            border-radius: 10px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #FF7E00;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #FF7E00;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0D1C2F;
+        }
+        #transactionIdsContainer {
+            display: none;
+            background-color: #0D1C2F;
+        }
+        #transactionIdsContainer.show {
+            display: block;
+        }
+        #transactionIds {
+            background-color: #0D1C2F;
+            color: #000000;
+        }
+        h2 {
+            color: #FF7E00;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 95%; 
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Interfaz de Transacciones</h1>
         <form id="dataForm">
             <div class="form-group">
-                <label for="publicKey">Clave Pública:</label>
-                <input type="text" id="publicKey" name="publicKey" value="">
+                <input type="text" id="publicKey" name="publicKey" placeholder="Ingrese la llave pública..." value="">
             </div>
             <button type="submit">Buscar Transacciones</button>
         </form>
@@ -24,5 +97,17 @@
 
     <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
     <script src="../Model/assets.js" type="module"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataForm = document.getElementById('dataForm');
+            const transactionIdsContainer = document.getElementById('transactionIdsContainer');
+
+            dataForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const publicKey = document.getElementById('publicKey').value;
+                transactionIdsContainer.classList.add('show');
+            });
+        });
+    </script>
 </body>
 </html>

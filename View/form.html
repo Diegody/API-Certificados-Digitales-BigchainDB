@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingresar Datos</title>
+<link rel="shortcut icon" href="../CSS/images/logo_final.png">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0D1C2F;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .container {
+    max-width: 500px;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #FF7E00;
+    border-radius: 10px;
+  }
+  h1, h2 {
+    margin-bottom: 20px;
+  }
+  form {
+    margin-bottom: 20px;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #FF7E00;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #FF7E00;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background-color: #0D1C2F;
+  }
+  #publicKeyContainer {
+    display: none;
+    margin-bottom: 20px;
+  }
+  #transactionIdsContainer ol {
+    display: flexbox;
+  }
+  .search-link {
+    color: #FF7E00;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  .search-link:hover {
+    color: #FFFFFF;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ingresar Datos a BigchainDB</h1>
+    <form id="dataForm">
+      <div class="form-group">
+        <label for="documento">Documento</label>
+        <input type="number" id="documento" name="documento" step="1" min="0" required>
+    </div>
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required>
+      </div>
+      <div class="form-group">
+        <label for="edad">Edad</label>
+        <input type="number" id="edad" name="edad" step="1" min="0" required>
+      </div>
+      <div class="form-group">
+        <label for="programa">Programa</label>
+        <input type="text" id="programa" name="programa" required>
+      </div>
+      <button type="submit">Enviar Activos a BigchainDB</button>
+    </form>
+    <div id="publicKeyContainer">
+      <h2>Clave Pública Generada</h2>
+      <p id="publicKey"></p>
+    </div>
+    <div id="transactionIdsContainer">
+      <h2>Tokens Generados</h2>
+      <ol id="transactionIds"></ol> 
+    </div>
+    <a href="search.html" class="search-link">Buscar esquema por token</a>
+    <a href="schema.html" class="search-link">Buscar esquema por llave pública</a>
+  </div>
+  
+  <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
+  <script src="../Model/send.js" type="module"></script>
+  <script type="module">
+      // import { API_PATH } from '../JS/globals.js';
+      
+      document.addEventListener('DOMContentLoaded', function() {
+          const publicKeyContainer = document.getElementById('publicKeyContainer');
+          const publicKeyElement = document.getElementById('publicKey');
+          const transactionIdsContainer = document.getElementById('transactionIdsContainer');
+          const transactionIds = document.getElementById('transactionIds');
+          let formSubmitted = true; 
+
+          document.getElementById('dataForm').addEventListener('submit', function(event) {
+              event.preventDefault();
+
+              if (formSubmitted) {
+                  return;
+              }
+
+              formSubmitted = false; 
+
+              const documento = document.getElementById('documento').value;
+              const nombre = document.getElementById('nombre').value;
+              const edad = document.getElementById('edad').value;
+              const programa = document.getElementById('programa').value;
+              const fecha = new Date().toString();
+
+              const alice = new BigchainDB.Ed25519Keypair();
+              const metadata = { what: 'Transacción en BigchainDB desde interfaz web' };
+              const data = { documento, nombre, edad, programa, fecha };
+
+              const tx = BigchainDB.Transaction.makeCreateTransaction(data, metadata, [BigchainDB.Transaction.makeOutput(BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))], alice.publicKey);
+              const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey);
+
+              new BigchainDB.Connection(API_PATH).postTransactionCommit(txSigned)
+                  .then(res => {
+                      console.log('Transacción', txSigned.id, 'aceptada');
+
+                      const listItem = document.createElement('li');
+                      listItem.innerText = `ID de transacción: ${txSigned.id}`;
+                      transactionIds.appendChild(listItem);
+
+                      publicKeyElement.textContent = alice.publicKey;
+                      publicKeyContainer.style.display = 'block';
+
+                      transactionIdsContainer.style.display = 'block';
+                  })
+                  .catch(error => {
+                      console.error('Error al crear la transacción:', error);
+                  });
+          });
+      });
+  </script>
+</body>
+</html>
